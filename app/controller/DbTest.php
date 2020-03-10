@@ -8,7 +8,7 @@ class DbTest{
         $sql = " select * from `user` WHERE age > :age limit :num";
         $map = ['age'=>20, 'num'=>2];
         $rs = Db::query($sql, $map);
-
+        //test
         dump($rs);
     }
 }
