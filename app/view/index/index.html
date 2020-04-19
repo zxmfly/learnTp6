@@ -1,0 +1,54 @@
+{include file="public/header"}
+<div class="header">
+    <span class="title"><span style="font-size: 20px;">{$title}</span>--后台管理系统</span>
+    <span class="userinfo">【{$login}】<span><a href="javascript:;">退出</a></span></span>
+</div>
+<div class="menu" id="menu">
+    <div class="layui-collapse" lay-accordion>
+        {volist name="left" id="data"}
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">{$data.title}</h2>
+            <div class="layui-colla-content {if $i eq 1}layui-show{/if}">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    {foreach $data['lists'] as $v }
+                    <li class="layui-nav-item"><a href="list.html">{$v.title}</a></li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+        {/volist}
+    </div>
+</div>
+<div class="main" style="padding:10px;">
+    <div class="content">
+        <span>商品列表</span>
+        <div></div>
+    </div>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>商品标题</th>
+            <th>分类</th>
+            <th>原价</th>
+            <th>折扣价</th>
+            <th>状态</th>
+            <th>添加时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="right" id="data"}
+        <tr>
+            <td>{$data.id}</td>
+            <td>{$data.title}</td>
+            <td>{$data.cat}</td>
+            <td>{$data.price}</td>
+            <td>{if $data.discount neq 0}{$data.price*$data.discount/10}({$data.discount}折){else}{$data.price}{/if}</td>
+            <td>{if $data.status == 1}开启{else/}关闭{/if}</td>
+            <td>{$data.add_time|date='Y-m-d H:i:s'}</td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+{include file="public/foot"}

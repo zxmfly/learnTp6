@@ -74,7 +74,7 @@ class Index extends BaseController
                 'status' => 1,
                 // 'status' => '开启',
                 'add_time' => '2019-12-12',
-                // 'add_time' => '1576080000'
+                 'add_time' => '1576080000'
             ],
             [
                 'id' => 2,
@@ -85,7 +85,7 @@ class Index extends BaseController
                 'status' => 1,
                 // 'status' => '开启',
                 'add_time' => '2019-12-12',
-                // 'add_time' => '1576080000'
+                 'add_time' => '1576080000'
             ],
             [
                 'id' => 3,
@@ -96,7 +96,7 @@ class Index extends BaseController
                 'status' => 2,
                 // 'status' => '关闭',
                 'add_time' => '2019-12-12',
-                // 'add_time' => '1576080000'
+                 'add_time' => '1576080000'
             ],
             [
                 'id' => 4,
@@ -106,8 +106,8 @@ class Index extends BaseController
                 'discount' => 9,
                 'status' => 1,
                 // 'status' => '开启',
-                'add_time' => '2019-12-12',
-                // 'add_time' => '1576080000'
+                //'add_time' => '2019-12-12',
+                 'add_time' => '1576080000'
             ],
         ];
         View::assign([

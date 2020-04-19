@@ -5,6 +5,89 @@
     <title>Title</title>
 </head>
 <body>
-    {$a+$b}
+    <div>{$a+$b}</div>
+    <div>{$a-$b}</div>
+    <div>{$a*$b}</div>
+    <div>{$a/$b}</div>
+    <div>{$a%$b}</div>
+    <div>{$a++}</div>
+    <div>{++$a}</div>
+    <div>{$a--}</div>
+    <div>{--$a}</div>
+    <div>{$c ? '存在' : '不存在'}</div>
+
+    <div>{$time|date='Y-m-d H:i:s'}</div>
+    <div>{$num|format='%02d'}</div>
+    <div>{$str|upper}</div>
+    <div>{$str|lower}</div>
+    <div>{$arr|first}</div>
+    <div>{$arr|last}</div>
+    <div>{$default|default="欧阳克"}</div>
+    <div>{$str|substr=0,3}</div>
+    <div>{$str|md5}</div>
+    <div>{$str|lower|substr=0,3}</div>
+
+    <br>循环标签<br>
+    key 下标，从0开始
+    {foreach $farr as $k => $v}
+    <div>
+        <span>ID：{$v['id']}</span>
+        <span>姓名：{$v['name']}</span>
+        <span>下标：{$k}</span>
+    </div>
+    {/foreach}
+    <br>四、volist 循环标签<br>
+    二维数组的结果输出
+    name 模板赋值的变量名称
+    id 当前的循环变量，可以随意起名
+    key 下标，从1开始，默认变量i
+    offset 开始行数,0,1,2...
+    length 获取行数
+    empty 如果数据为空，显示此文字
+    view文件
+
+    {volist name="farr" id="v"  offset="1" length="2"}
+    <div>
+        <span>ID：{$v['id']}</span>
+        <span>姓名：{$v['name']}</span>
+        <span>key="k" 更改，默认i 下标：{$i}</span>
+    </div>
+    {/volist}
+
+    <br>if 判断标签<br>
+    {if $status == 1}
+    <div>开启</div>
+    {/if}
+
+    {if $status == 0}
+    <div>关闭</div>
+    {else/}
+    <div>开启</div>
+    {/if}
+
+    {if $order_status == 0}
+    <div>未支付</div>
+    {elseif $order_status == 1/}
+    <div>已支付 待发货</div>
+    {elseif $order_status == 2/}
+    <div>已发货 待收货</div>
+    {elseif $order_status == 3/}
+    <div>已收货 待评论</div>
+    {elseif $order_status == 4/}
+    <div>已完成</div>
+    {/if}
+
+    <br>六、switch 判断标签<br>
+    {switch $order_status}
+    {case 0 }<div>未支付</div>{/case}
+    {case 1 }<div>已支付 待发货</div>{/case}
+    {case 2 }<div>已发货 待收货</div>{/case}
+    {case 3 }<div>已收货 待评论</div>{/case}
+    {case 4 }<div>已完成</div>{/case}
+    {/switch}
+
+    <br>七、包含文件<br>
+
+
 </body>
 </html>
