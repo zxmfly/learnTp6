@@ -52,4 +52,9 @@ class Test
         //return View::fetch('index');
     }
 
+    public function testdb(){
+
+        return View::fetch();
+    }
+
 }
