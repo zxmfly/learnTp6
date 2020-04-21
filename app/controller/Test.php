@@ -76,6 +76,9 @@ class Test
         //2、多条数据查询 select 方法查询结果是一个数据集对象，如果需要转换为数组可以使用
         $select = Db::table('shop_goods')->where('status', 1)->select();
         dump ($select->all());
+        if($select->isEmpty()){//$select 是对象，提供判断方法
+            echo "数据为空";
+        }
         $select = Db::table('shop_goods')->where('status', 1)->select()->toArray();//直接转换成数组
 
         //如果设置了数据表前缀参数的话，可以使用
@@ -131,19 +134,16 @@ class Test
 
         //6、删除
         # 根据条件删除数据
-        $delete = Db::table('shop_goods')->where('id',1)->delete();
-        print_r($delete);
+        //$delete = Db::table('shop_goods')->where('id',1)->delete();
         # 删除主键为2的数据
-        $delete = Db::table('shop_goods')->delete(2);
-        print_r($delete);
+        //$delete = Db::table('shop_goods')->delete(2);
         # 删除整表数据
-        $delete = Db::table('shop_goods')->delete(true);
-        print_r($delete);
+        //$delete = Db::table('shop_goods')->delete(true);
 
         //2、软删除 useSoftDelete 业务数据不建议真实删除数据，TP系统提供了软删除机制
         # 软删除
-        $delete = Db::table('shop_goods')->useSoftDelete('status',3)->delete();
-        //相当update status = 3
+        $delete = Db::table('shop_goods')->useSoftDelete('status',3)->delete(2);
+        //相当update status = 3 where id=2
 
         //7、save 操作
         //save 方法统一写入数据，自动判断是新增还是更新数据（以写入数据中是否存在主键数据为依据）。
@@ -152,7 +152,7 @@ class Test
         $save = Db::table('shop_goods')->save($data);
         print_r($save);
         # 修改数据
-        $data = ['price'=>'99.00','id'=>3];
+        $data = ['price'=>'99.00','id'=>25];
         $save = Db::table('shop_goods')->save($data);
         print_r($save);
 

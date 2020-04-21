@@ -34,6 +34,7 @@
             <th>折扣价</th>
             <th>状态</th>
             <th>添加时间</th>
+            <th>操作</th>
         </tr>
         </thead>
         <tbody>
@@ -41,14 +42,26 @@
         <tr>
             <td>{$data.id}</td>
             <td>{$data.title}</td>
-            <td>{$data.cat}</td>
+            <td>{$catArr[$data.cat]}</td>
             <td>{$data.price}</td>
             <td>{if $data.discount neq 0}{$data.price*$data.discount/10}({$data.discount}折){else}{$data.price}{/if}</td>
-            <td>{if $data.status == 1}开启{else/}关闭{/if}</td>
+            <td>{if $data.status == 1}开启{elseif $data.status eq 2/}关闭 {else/}删除{/if}</td>
             <td>{$data.add_time|date='Y-m-d H:i:s'}</td>
+            <td><button class="layui-btn layui-btn-xs" onclick="edit({$data.id})">编辑</button></td>
         </tr>
         {/volist}
         </tbody>
     </table>
 </div>
 {include file="public/foot"}
+<script type="text/javascript">
+    function edit(id){
+        layer.open({
+            type: 2,
+            title: '添加',
+            shade: 0.3,
+            area: ['480px', '440px'],
+            content: '/index.php/index/edit?id='+id
+        });
+    }
+</script>
