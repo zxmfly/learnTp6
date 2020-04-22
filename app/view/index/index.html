@@ -22,6 +22,7 @@
 <div class="main" style="padding:10px;">
     <div class="content">
         <span>商品列表</span>
+        <button class="layui-btn layui-btn-xs add" onclick="add()">添加</button>
         <div></div>
     </div>
     <table class="layui-table">
@@ -47,7 +48,9 @@
             <td>{if $data.discount neq 0}{$data.price*$data.discount/10}({$data.discount}折){else}{$data.price}{/if}</td>
             <td>{if $data.status == 1}开启{elseif $data.status eq 2/}关闭 {else/}删除{/if}</td>
             <td>{$data.add_time|date='Y-m-d H:i:s'}</td>
-            <td><button class="layui-btn layui-btn-xs" onclick="edit({$data.id})">编辑</button></td>
+            <td><button class="layui-btn layui-btn-xs" onclick="edit({$data.id})">编辑</button>
+                <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del({$data.id})">删除</button>
+            </td>
         </tr>
         {/volist}
         </tbody>
@@ -55,13 +58,45 @@
 </div>
 {include file="public/foot"}
 <script type="text/javascript">
+    layui.use('layer',function(){
+        layer = layui.layer;
+        $ = layui.jquery;
+    });
     function edit(id){
+        layer.open({
+            type: 2,
+            title: '修改',
+            shade: 0.3,
+            area: ['480px', '440px'],
+            content: '/index.php/index/edit?id='+id
+        });
+    }
+    function add(){
         layer.open({
             type: 2,
             title: '添加',
             shade: 0.3,
             area: ['480px', '440px'],
-            content: '/index.php/index/edit?id='+id
+            content: '/index.php/index/add'
+        });
+    }
+    function del( id){
+        layer.confirm('确定删除行么',
+            {
+                icon:3,
+                btn: ['确定','取消']
+            }, function() {
+            //向服务端发送删除指令
+            $.get("/index.php/index/del?id=" + id, function (res) {
+                if (res.code > 0) {
+                    layer.alert(res.msg, {icon: 2});
+                } else {
+                    layer.msg(res.msg);
+                    setTimeout(function () {
+                        parent.window.location.reload();
+                    }, 1000);
+                }
+            }, 'json');
         });
     }
 </script>

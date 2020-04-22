@@ -57,6 +57,40 @@ class Index extends BaseController
         }
     }
 
+    public function add(){
+
+        if(Request::method() == 'POST'){
+            $data = Request::param();
+            $data['add_time'] = time();
+            $insert = Db::table('shop_goods')->insert($data);
+            if($insert){
+                echo json_encode(['code'=>0,'msg'=>'添加成功']);
+            }else{
+                echo json_encode(['code'=>1,'msg'=>'添加失败']);
+            }
+        }else {
+            $cat = Db::table('shop_cat')->where('status', 1)->select();
+            View::assign([
+                'cat' => $cat
+            ]);
+            return View::fetch();
+        }
+    }
+
+    public function del(){
+        $id = Request::param('id');
+        if($id) {
+            $delete = Db::table('shop_goods')->delete($id);
+            if($delete){
+                echo json_encode(['code'=>0,'msg'=>'删除成功']);
+            }else{
+                echo json_encode(['code'=>1,'msg'=>'删除失败']);
+            }
+        }else{
+            echo json_encode(['code'=>1,'msg'=>'操作有误']);
+        }
+    }
+
     public function user()
     {
         return 'user';
