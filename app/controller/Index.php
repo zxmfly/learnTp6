@@ -12,7 +12,7 @@ class Index extends BaseController
     {
         $title = '商城';
         $login = '欧阳克';
-
+        $limit = 3;
         $left = Db::table('shop_menu')->where('fid', 0)->select()->toArray();
         $cat = Db::table('shop_cat')->where('status', 1)->select();
         foreach ($cat as $key => $value) {
@@ -21,13 +21,23 @@ class Index extends BaseController
         foreach($left as &$val){
             $val['lists'] = Db::table('shop_menu')->where('fid', $val['id'])->select()->toArray();
         }
-        $right = Db::table('shop_goods')->select()->toArray();
+        $all = Request::param();
+        $status = isset($all['status']) ? $all['status'] : 0;
+        $where = $status > 0 ? ['status'=>$status] : true;
+        $count = Db::table('shop_goods')->where($where)->count();
+        $p = isset($all['p']) ? $all['p'] : 1;
+        $limit = isset($all['limit']) ? $all['limit'] : $limit;
+        $right = Db::table('shop_goods')->where($where)->page($p, $limit)->select()->toArray();
         View::assign([
             'title'  => $title,
             'login' => $login,
             'left' => $left,
             'right' => $right,
-            'catArr' => $catArr
+            'catArr' => $catArr,
+            'status' => $status,
+            'limit' => $limit,
+            'count' => $count,
+            'p'=>$p,
         ]);
         return View::fetch();
         //return View::fetch();
@@ -80,7 +90,8 @@ class Index extends BaseController
     public function del(){
         $id = Request::param('id');
         if($id) {
-            $delete = Db::table('shop_goods')->delete($id);
+           // $delete = Db::table('shop_goods')->delete($id);
+            $delete = Db::table('shop_goods')->useSoftDelete('status',3)->delete($id);
             if($delete){
                 echo json_encode(['code'=>0,'msg'=>'删除成功']);
             }else{
