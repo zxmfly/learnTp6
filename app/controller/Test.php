@@ -7,12 +7,26 @@
 
 namespace app\controller;
 
+use app\model\Goods;
 use think\facade\Db;
 use think\facade\View;
 
 class Test
 {
+    //使用模型操作数据库
+    public function useModel(){
+        $db = new Goods();
+        $index = $db->getOne();
+        dump($index->toArray());
+        //$add = $db->addOne();
+        //var_dump($add);
+        //$up = $db->updateOne();
+        //var_dump($up);
 
+        var_dump($db->findStatus());
+
+
+    }
     public function index(){
         $a= 100;
         $b = 101;
@@ -48,6 +62,18 @@ class Test
         View::assign('status',1);
         View::assign('order_status',3);
 
+        //调试：
+        $select = Db::table('shop_goods')->where('id','>=',10)->select();
+        echo Db::getLastSql();//方法只能获取最后执行的 SQL 记录
+
+        //fetchSql 方法直接返回当前的 SQL 而不执行
+        $select = Db::table('shop_goods')->fetchSql()->select();
+        echo $select;
+
+        //动态连接数据库
+        $admin_user = Db::connect('sgzm_admin')->table('t_admin_user')->select()->toArray();
+        dump($admin_user);
+
         return View::fetch();
         // 模板输出
         //return View::fetch('index');
@@ -82,8 +108,11 @@ class Test
         $select = Db::table('shop_goods')->where('status', 1)->select()->toArray();//直接转换成数组
 
         //如果设置了数据表前缀参数的话，可以使用
-        Db::name('shop_goods')->where('id', 1)->find();
-        Db::name('shop_goods')->where('status', 1)->select();
+
+        $sql = Db::name('goods')->where('id', 1)->find();
+        var_dump($sql);
+        $sql = Db::name('goods')->where('status', 1)->where('id', '>',25)->select();
+        var_dump($sql);
 
         //3、值和列查询 返回某个字段的值
         Db::table('shop_goods')->where('id', 1)->value('title');
