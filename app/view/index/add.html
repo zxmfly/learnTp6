@@ -12,9 +12,9 @@
         <div class="layui-input-inline">
             <select name="cat">
                 <option value=0></option>
-                {volist name="cat" id="cat_v"}
-                <option value="{$cat_v['id']}" >{$cat_v['name']}</option>
-                {/volist}
+                {foreach $cat as $key=>$v }
+                <option value="{$key}">{$v}</option>
+                {/foreach}
             </select>
         </div>
     </div>

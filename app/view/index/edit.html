@@ -13,9 +13,9 @@
         <div class="layui-input-inline">
             <select name="cat">
                 <option value=0 {if $shop['cat']==0} selected {/if}></option>
-                {volist name="cat" id="cat_v"}
-                <option value="{$cat_v['id']}" {if $shop['cat']==$cat_v['id']} selected {/if}>{$cat_v['name']}</option>
-                {/volist}
+                {foreach $cat as $key=>$v }
+                <option value="{$key}" {if $shop['cat']==$key} selected {/if}>{$v}</option>
+                {/foreach}
             </select>
         </div>
     </div>

@@ -56,7 +56,7 @@
         <tr>
             <td>{$data.id}</td>
             <td>{$data.title}</td>
-            <td>{$catArr[$data.cat]}</td>
+            <td>{$cat[$data.cat]}</td>
             <td>{$data.price}</td>
             <td>{if $data.discount neq 0}{$data.price*$data.discount/10}({$data.discount}折){else}{$data.price}{/if}</td>
             <td>{if $data.status == 1}开启{elseif $data.status == 2}关闭{else}删除{/if}</td>

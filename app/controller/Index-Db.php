@@ -2,57 +2,52 @@
 namespace app\controller;
 
 use app\BaseController;
-use app\model\Cat;
-use app\model\Goods;
-use app\model\Menu;
 use think\facade\Db;
 use think\facade\Request;
 use think\facade\View;
 
 class Index extends BaseController
 {
-    public $cat = [];
-    public function __construct()
-    {
-        $this->cat = Cat::getAll();
-        View::assign([
-            'cat' => $this->cat
-        ]);
-    }
-
     public function index()
     {
         $title = '商城';
         $login = '欧阳克';
         $limit = 3;
-        $left = Menu::getAll();
-
+        $left = Db::table('shop_menu')->where('fid', 0)->select()->toArray();
+        $cat = Db::table('shop_cat')->where('status', 1)->select();
+        foreach ($cat as $key => $value) {
+            $catArr[$value['id']] = $value['name'];
+        }
+        foreach($left as &$val){
+            $val['lists'] = Db::table('shop_menu')->where('fid', $val['id'])->select()->toArray();
+        }
         $all = Request::param();
         $status = isset($all['status']) ? $all['status'] : 0;
         $where = $status > 0 ? ['status'=>$status] : true;
-        $count = Goods::getCount($where);
-
+        $count = Db::table('shop_goods')->where($where)->count();
         $p = isset($all['p']) ? $all['p'] : 1;
         $limit = isset($all['limit']) ? $all['limit'] : $limit;
-        $right = Goods::getAll($where, $p, $limit);
-
+        $right = Db::table('shop_goods')->where($where)->page($p, $limit)->select()->toArray();
         View::assign([
             'title'  => $title,
             'login' => $login,
             'left' => $left,
             'right' => $right,
+            'catArr' => $catArr,
             'status' => $status,
             'limit' => $limit,
             'count' => $count,
             'p'=>$p,
         ]);
         return View::fetch();
+        //return View::fetch();
+        //dump(Db::query("select * from `user` limit 1"));
     }
 
     public function edit(){
         if(Request::method() == 'POST'){
             $all = Request::param();
-            $update = Goods::updateGoods($all);
+            $update = Db::table('shop_goods')->where('id',$all['id'])->update($all);
             if($update){
                 echo json_encode(['code'=>0,'msg'=>'修改成功']);
             }else{
@@ -60,9 +55,11 @@ class Index extends BaseController
             }
         }elseif (Request::method() == 'GET') {
             $id = Request::param('id');
-            $shop = Goods::find($id);
+            $shop = Db::table('shop_goods')->where('id', $id)->find();
+            $cat = Db::table('shop_cat')->where('status', 1)->select();
             View::assign([
                 'shop' => $shop,
+                'cat' => $cat
             ]);
             return View::fetch();
         }else{
@@ -75,13 +72,17 @@ class Index extends BaseController
         if(Request::method() == 'POST'){
             $data = Request::param();
             $data['add_time'] = time();
-            $insert = Goods::insert($data);
+            $insert = Db::table('shop_goods')->insert($data);
             if($insert){
                 echo json_encode(['code'=>0,'msg'=>'添加成功']);
             }else{
                 echo json_encode(['code'=>1,'msg'=>'添加失败']);
             }
         }else {
+            $cat = Db::table('shop_cat')->where('status', 1)->select();
+            View::assign([
+                'cat' => $cat
+            ]);
             return View::fetch();
         }
     }
@@ -90,7 +91,7 @@ class Index extends BaseController
         $id = Request::param('id');
         if($id) {
            // $delete = Db::table('shop_goods')->delete($id);
-            $delete = Goods::useSoftDelete('status',3)->delete($id);
+            $delete = Db::table('shop_goods')->useSoftDelete('status',3)->delete($id);
             if($delete){
                 echo json_encode(['code'=>0,'msg'=>'删除成功']);
             }else{
