@@ -16,7 +16,8 @@ class Index extends BaseController
     {
         $this->cat = Cat::getAll();
         View::assign([
-            'cat' => $this->cat
+            'cat' => $this->cat,
+            'title' => '商品列表',
         ]);
     }
 
