@@ -23,7 +23,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">验证码:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="code" lay-verify="required" placeholder="请输入验证码" class="layui-input">
+                        <input type="text" name="captcha_code" lay-verify="required" placeholder="请输入验证码" class="layui-input">
                     </div>
                     <img src="{:captcha_src()}" alt="captcha" style="cursor:pointer" title="点击图片刷新" onClick="this.src='{:captcha_src()}?'+Math.random();" />
                 </div>

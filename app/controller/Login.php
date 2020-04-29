@@ -27,6 +27,19 @@ class Login extends BaseController
 
     public function login(){
         $all = Request::param();
+        if(empty($all['username'])){
+            rs_json(1,'用户名不能为空');
+        }
+        if(empty($all['password'])){
+            rs_json(1,'密码不能为空');
+        }
+        if(empty($all['captcha_code'])){
+            rs_json(1,'验证码不能为空');
+        }
+        if(!captcha_check($all['captcha_code'])){
+            rs_json(1,'验证码错误');
+        }
+
         echo json_encode(['data'=>$all,'code'=>1,'msg'=>'登录成功']);
     }
 }
