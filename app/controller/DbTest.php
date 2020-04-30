@@ -1,9 +1,14 @@
 <?php
 namespace app\controller;
 
+use app\model\Admins;
 use think\facade\Db;
 
 class DbTest{
+    public function admins(){
+        $admin = Admins::where('username','admin')->find()->toArray();
+        dump($admin);
+    }
     public function demo1(){
         $sql = " select * from `user` WHERE age > :age limit :num";
         $map = ['age'=>20, 'num'=>2];

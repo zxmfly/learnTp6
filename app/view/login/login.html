@@ -25,7 +25,7 @@
                     <div class="layui-input-inline">
                         <input type="text" name="captcha_code" lay-verify="required" placeholder="请输入验证码" class="layui-input">
                     </div>
-                    <img src="{:captcha_src()}" alt="captcha" style="cursor:pointer" title="点击图片刷新" onClick="this.src='{:captcha_src()}?'+Math.random();" />
+                    <img id="refresh" src="{:captcha_src()}" alt="captcha" style="cursor:pointer" title="点击图片刷新" onClick="this.src='{:captcha_src()}?'+Math.random();" />
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
@@ -73,6 +73,9 @@
             $.post('/index.php/login/login', data.field, function(res){
                 if(res.code>0){
                     layer.msg(res.msg, {icon: 2, time:1000});
+
+                    var captcha = document.getElementById('refresh');
+                    captcha.src = '{:captcha_src()}?' + Math.random();
                 }else{
                     layer.msg(res.msg, {icon: 1, time:1000});
                     setTimeout(function(){
