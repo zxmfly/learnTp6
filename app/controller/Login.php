@@ -7,11 +7,11 @@
 
 namespace app\controller;
 
-
 use app\BaseController;
 use app\model\Admins;
 use think\facade\Request;
 use think\facade\View;
+use think\facade\Session;
 
 class Login extends BaseController
 {
@@ -20,13 +20,19 @@ class Login extends BaseController
      */
     public function index()
     {
+        $learntTpAdmin = Session::get('learnTpAdmin');
+        if(!empty($learntTpAdmin)){
+            echo $learntTpAdmin;
+            header('location:/');
+            exit;
+        }
         View::assign([
             'title' => '登录',
         ]);
         return View::fetch('login');
     }
 
-    public function login(){
+    public function loginAction(){
         $all = Request::param();
 
         if(empty($all['username'])){
@@ -49,7 +55,8 @@ class Login extends BaseController
         }elseif ($admin['status'] != 0){
             rs_json(1,'账户已被禁用');
         }
-        session('learnTpAdmin', $all['username']);
-        rs_json(0,'登录成功');
-    }
+        Session::Set('learnTpAdmin', $all['username']);
+
+        rs_json(0,'登录成功',[],0);
+}
 }

@@ -70,16 +70,15 @@
 
         //监听提交
         form.on('submit(loginFrom)', function(data){
-            $.post('/index.php/login/login', data.field, function(res){
+            $.post('/index.php/login/loginAction', data.field, function(res){
                 if(res.code>0){
                     layer.msg(res.msg, {icon: 2, time:1000});
-
                     var captcha = document.getElementById('refresh');
                     captcha.src = '{:captcha_src()}?' + Math.random();
                 }else{
                     layer.msg(res.msg, {icon: 1, time:1000});
                     setTimeout(function(){
-                        parent.window.location.href = '/index.php/';
+                        window.location.href = '/';
                         },500);
                 }
             },'json');

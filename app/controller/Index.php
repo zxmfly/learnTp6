@@ -1,30 +1,19 @@
 <?php
 namespace app\controller;
 
-use app\BaseController;
 use app\model\Cat;
 use app\model\Goods;
 use app\model\Menu;
-use think\facade\Db;
 use think\facade\Request;
 use think\facade\View;
 
-class Index extends BaseController
+class Index extends BaseAdmin
 {
-    public $cat = [];
-    public function __construct()
-    {
-        $this->cat = Cat::getAll();
-        View::assign([
-            'cat' => $this->cat,
-            'title' => '商品列表',
-        ]);
-    }
-
+    
     public function index()
     {
         $title = '商城';
-        $login = '欧阳克';
+        $login = $this->learntTpAdmin;
         $limit = 3;
         $left = Menu::getAll();
 
@@ -36,8 +25,10 @@ class Index extends BaseController
         $p = isset($all['p']) ? $all['p'] : 1;
         $limit = isset($all['limit']) ? $all['limit'] : $limit;
         $right = Goods::getAll($where, $p, $limit);
+        $cat = Cat::getAll();
 
         View::assign([
+            'cat' => $cat,
             'title'  => $title,
             'login' => $login,
             'left' => $left,
@@ -62,7 +53,10 @@ class Index extends BaseController
         }elseif (Request::method() == 'GET') {
             $id = Request::param('id');
             $shop = Goods::find($id);
+            $cat = Cat::getAll();
             View::assign([
+                'cat' => $cat,
+                'title'  => '修改',
                 'shop' => $shop,
             ]);
             return View::fetch();
@@ -83,6 +77,11 @@ class Index extends BaseController
                 echo json_encode(['code'=>1,'msg'=>'添加失败']);
             }
         }else {
+            $cat = Cat::getAll();
+            View::assign([
+                'cat' => $cat,
+                'title'  => '修改',
+            ]);
             return View::fetch();
         }
     }
@@ -101,6 +100,8 @@ class Index extends BaseController
             echo json_encode(['code'=>1,'msg'=>'操作有误']);
         }
     }
+
+
 
     public function user()
     {
