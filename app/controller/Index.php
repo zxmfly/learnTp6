@@ -9,7 +9,23 @@ use think\facade\View;
 
 class Index extends BaseAdmin
 {
-    
+    //仿爱奇艺视频网站学习
+    public function home(){
+        $title = '商城管理系统';
+        $login = $this->learntTpAdmin;
+        $left = Menu::getAll();
+
+
+        $data = compact('title','login','left');
+        View::assign($data);
+        return View::fetch();
+    }
+
+    public function welcome(){
+        return View::fetch();
+    }
+
+    //tp6正式版学习
     public function index()
     {
         $title = '商城';
