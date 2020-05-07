@@ -4,20 +4,20 @@
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-inline">
-            <input type="text" class="layui-input" name="username" value="">
+            <input type="text" lay-verify="required|username" class="layui-input" name="username" value="">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">密码</label>
         <div class="layui-input-inline">
-            <input type="text" class="layui-input" name="password" value="">
+            <input type="text" lay-verify="required|password" class="layui-input" name="password" value="">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">角色</label>
         <div class="layui-input-inline">
-            <select name="gid">
-                <option value=0></option>
+            <select name="gid" lay-verify="required" lay-search>
+                <option></option>
                 {foreach $groups as $key=>$v }
                 <option value="{$v.gid}">{$v.title}</option>
                 {/foreach}
@@ -27,7 +27,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">姓名</label>
         <div class="layui-input-inline">
-            <input type="text" class="layui-input" name="truename" value="">
+            <input type="text" lay-verify="required|truename" class="layui-input" name="truename" value="">
         </div>
     </div>
     <div class="layui-form-item">
@@ -39,23 +39,60 @@
             </select>
         </div>
     </div>
-</form>
-<div class="layui-form-item">
-    <div class="layui-input-block">
-        <button class="layui-btn" onclick="save()">保存</button>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn"  lay-submit lay-filter="addAdminFrom">保存</button>
+        </div>
     </div>
-</div>
+</form>
 {include file="public/foot"}
 <script type="text/javascript">
     layui.use(['layer','form'],function(){
         form = layui.form;
         layer = layui.layer;
         $ = layui.jquery;
+        form.verify({
+            username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字';
+                }
+            }
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            , password: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+            , gid:function(value){
+                if(value == 0){
+                    return '内容请输入至少4个字符';
+                }
+            }
+        });
+        //监听提交
+        form.on('submit(addAdminFrom)', function (data) {
+            $.post('/index.php/Admin/add',data.field,function(res){
+                if(res.code>0){
+                    layer.msg(res.msg,{icon:2, time:500});
+                }else{
+                    layer.msg(res.msg,{time:500});
+                    setTimeout(function(){parent.window.location.reload();},500);
+                }
+            },'json');
+            return false;
+        });
     });
+
     function save(){
         $.post('/index.php/Admin/add',$('form').serialize(),function(res){
             if(res.code>0){
-                layer.alert(res.msg,{icon:2});
+                layer.msg(res.msg,{icon:2, time:500});
             }else{
                 layer.msg(res.msg);
                 setTimeout(function(){parent.window.location.reload();},500);

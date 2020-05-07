@@ -26,6 +26,8 @@ class BaseAdmin extends BaseController
         }
     }
 
+    //判断权限
+
     public function loginOut(){
         Session::clear();
         return redirect('/login');

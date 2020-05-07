@@ -18,3 +18,5 @@ Route::get('hello/:name', 'index/hello');
 
 Route::get('login', 'login/index');
 Route::get('loginOut', 'index/loginOut');
+
+Route::get('home', 'index/home');

@@ -4,7 +4,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-inline">
-            <input type="text" class="layui-input" name="username" value="{$admins.username}">
+            <input readonly type="text" lay-verify="required|username" class="layui-input" name="username" value="{$admins.username}">
         </div>
     </div>
     <div class="layui-form-item">
@@ -16,8 +16,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">角色</label>
         <div class="layui-input-inline">
-            <select name="gid">
-                <option value=0></option>
+            <select name="gid" lay-verify="required" lay-search>
+                <option></option>
                 {foreach $groups as $key=>$v }
                 <option value="{$key}" {if $admins.gid eq $key} selected {/if} >{$v}</option>
                 {/foreach}
@@ -40,23 +40,55 @@
         </div>
     </div>
     <input type="hidden" name="id" value="{$admins.id}">
-</form>
-<div class="layui-form-item">
-    <div class="layui-input-block">
-        <button class="layui-btn" onclick="save()">保存</button>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="editAdminFrom" >保存</button>
+        </div>
     </div>
-</div>
+</form>
+
 {include file="public/foot"}
 <script type="text/javascript">
     layui.use(['layer','form'],function(){
         form = layui.form;
         layer = layui.layer;
         $ = layui.jquery;
+
+        form.verify({
+            username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字';
+                }
+            }
+            , gid:function(value){
+                if(value == 0){
+                    return '内容请输入至少4个字符';
+                }
+            }
+        });
+        //监听提交
+        form.on('submit(editAdminFrom)', function (data) {
+            $.post('/index.php/Admin/edit',data.field,function(res){
+                if(res.code>0){
+                    layer.msg(res.msg,{icon:2, time:500});
+                }else{
+                    layer.msg(res.msg);
+                    setTimeout(function(){parent.window.location.reload();},500);
+                }
+            },'json');
+            return false;
+        });
     });
     function save(){
         $.post('/index.php/Admin/edit',$('form').serialize(),function(res){
             if(res.code>0){
-                layer.alert(res.msg,{icon:2});
+                layer.msg(res.msg,{icon:2, time:500});
             }else{
                 layer.msg(res.msg);
                 setTimeout(function(){parent.window.location.reload();},500);
