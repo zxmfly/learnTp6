@@ -1,0 +1,66 @@
+{include file="public/header"}
+<body style="padding:10px;">
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="username" value="{$admins.username}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="password" value="" placeholder="不改则不用填写">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-inline">
+            <select name="gid">
+                <option value=0></option>
+                {foreach $groups as $key=>$v }
+                <option value="{$key}" {if $admins.gid eq $key} selected {/if} >{$v}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="truename" value="{$admins.truename}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+            <select name="status">
+                <option value="0" {if $admins.status eq 0} selected {/if} >正常</option>
+                <option value="1" {if $admins.status eq 1} selected {/if} >禁用</option>
+            </select>
+        </div>
+    </div>
+    <input type="hidden" name="id" value="{$admins.id}">
+</form>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" onclick="save()">保存</button>
+    </div>
+</div>
+{include file="public/foot"}
+<script type="text/javascript">
+    layui.use(['layer','form'],function(){
+        form = layui.form;
+        layer = layui.layer;
+        $ = layui.jquery;
+    });
+    function save(){
+        $.post('/index.php/Admin/edit',$('form').serialize(),function(res){
+            if(res.code>0){
+                layer.alert(res.msg,{icon:2});
+            }else{
+                layer.msg(res.msg);
+                setTimeout(function(){parent.window.location.reload();},500);
+            }
+        },'json');
+    }
+</script>

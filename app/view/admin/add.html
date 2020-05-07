@@ -1,0 +1,65 @@
+{include file="public/header"}
+<body style="padding:10px;">
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="username" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="password" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-inline">
+            <select name="gid">
+                <option value=0></option>
+                {foreach $groups as $key=>$v }
+                <option value="{$v.gid}">{$v.title}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="truename" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+            <select name="status">
+                <option value="0" selected >正常</option>
+                <option value="1" >禁用</option>
+            </select>
+        </div>
+    </div>
+</form>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" onclick="save()">保存</button>
+    </div>
+</div>
+{include file="public/foot"}
+<script type="text/javascript">
+    layui.use(['layer','form'],function(){
+        form = layui.form;
+        layer = layui.layer;
+        $ = layui.jquery;
+    });
+    function save(){
+        $.post('/index.php/Admin/add',$('form').serialize(),function(res){
+            if(res.code>0){
+                layer.alert(res.msg,{icon:2});
+            }else{
+                layer.msg(res.msg);
+                setTimeout(function(){parent.window.location.reload();},500);
+            }
+        },'json');
+    }
+</script>

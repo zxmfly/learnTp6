@@ -11,7 +11,9 @@
             <div class="layui-colla-content {if $i eq 1}layui-show{/if}">
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
                     {foreach $data['lists'] as $v }
-                    <li class="layui-nav-item"><a href="list.html">{$v.title}</a></li>
+                    {if $v['ishidden'] eq 0}
+                    <li class="layui-nav-item"><a onclick="menuFire(this)" src="/index.php/{$v['controller']}/{$v['method']}" href="javascript:;">{$v.title}</a></li>
+                    {/if}
                     {/foreach}
                 </ul>
             </div>
@@ -42,5 +44,10 @@
         }, function(index){
             //按钮【按钮二】的回调
         });
+    }
+
+    function menuFire(obj) {
+        var src = $(obj).attr('src');
+        $('iframe').attr('src', src);
     }
 </script>

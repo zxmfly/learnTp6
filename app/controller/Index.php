@@ -2,6 +2,7 @@
 namespace app\controller;
 
 use app\model\Cat;
+use app\model\AdminMenu;
 use app\model\Goods;
 use app\model\Menu;
 use think\facade\Request;
@@ -13,7 +14,7 @@ class Index extends BaseAdmin
     public function home(){
         $title = '商城管理系统';
         $login = $this->learntTpAdmin;
-        $left = Menu::getAll();
+        $left = AdminMenu::getAll();
 
 
         $data = compact('title','login','left');

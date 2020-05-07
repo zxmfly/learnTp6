@@ -13,4 +13,8 @@ class Admins extends Model
 {
     protected $table = 'admins';
 
+    public static function updateAdmins($all){
+        return Admins::where('id',$all['id'])->update($all);
+    }
+
 }
