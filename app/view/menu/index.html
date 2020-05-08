@@ -1,0 +1,59 @@
+{include file="public/header"}
+<div style="padding:10px;">
+    <div class="content">
+        <span>{$title}</span>
+        {if $pid > 0}
+        <button onclick="back({$back_id});return false;" style="float: right;" type="button" class="layui-btn layui-btn-primary layui-btn-sm">返回上一级</button>
+        {/if}
+        <div></div>
+    </div>
+    <form class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>排序</th>
+            <th>菜单名称</th>
+            <th>controller</th>
+            <th>method</th>
+            <th>是否隐藏</th>
+            <th>是否禁用</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="menus" id="data"}
+        <tr>
+            <td>{$data.mid}</td>
+            <td><input type="text" name="ord" value="{$data.ord}" class="layui-input"/></td>
+            <td><input type="text" name="ord" value="{$data.title}" class="layui-input"/></td>
+            <td><input type="text" name="ord" value="{$data.controller}" class="layui-input"/></td>
+            <td><input type="text" name="ord" value="{$data.method}" class="layui-input"/></td>
+            <td><input type="checkbox" title="隐藏" lay-skin="primary"  {$data.ishidden ? 'checked' : '' } /></td>
+            <td><input type="checkbox" title="禁用" lay-skin="primary"  {$data.status ? 'checked' : '' } /</td>
+            <td><button class="layui-btn layui-btn-xs" onclick="child({$data.mid}); return false;">子菜单</button>
+
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    </form>
+</div>
+{include file="public/foot"}
+<script type="text/javascript">
+    layui.use(['layer','form','laypage'],function() {
+        layer = layui.layer;
+        form = layui.form;
+        $ = layui.jquery;
+    });
+
+    function child(pid){
+        window.location.href = '/index.php/menu/index?pid='+pid;
+    }
+
+    function back(pid) {
+        window.location.href = '/index.php/menu/index?pid='+pid;
+    }
+
+</script>

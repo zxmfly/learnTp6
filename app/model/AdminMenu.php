@@ -13,6 +13,7 @@ use think\Model;
 class AdminMenu extends Model
 {   protected $table = 'admin_menus';
     protected $pk = 'mid';
+
     public static function getAll(){
         $menu = self::getMenuByfid();
         foreach ($menu as &$row){
@@ -24,4 +25,5 @@ class AdminMenu extends Model
     public static function getMenuByfid($fid = 0){
         return AdminMenu::where('pid', $fid)->select()->toArray();
     }
+
 }
