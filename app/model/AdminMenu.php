@@ -26,4 +26,8 @@ class AdminMenu extends Model
         return AdminMenu::where('pid', $fid)->select()->toArray();
     }
 
+    public static function updateAdminMenu($all){
+        return AdminMenu::where('mid',$all['mid'])->update($all);
+    }
+
 }

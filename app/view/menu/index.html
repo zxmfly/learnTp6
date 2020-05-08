@@ -25,20 +25,31 @@
         {volist name="menus" id="data"}
         <tr>
             <td>{$data.mid}</td>
-            <td><input type="text" name="ord" value="{$data.ord}" class="layui-input"/></td>
-            <td><input type="text" name="ord" value="{$data.title}" class="layui-input"/></td>
-            <td><input type="text" name="ord" value="{$data.controller}" class="layui-input"/></td>
-            <td><input type="text" name="ord" value="{$data.method}" class="layui-input"/></td>
-            <td><input type="checkbox" title="隐藏" lay-skin="primary"  {$data.ishidden ? 'checked' : '' } /></td>
-            <td><input type="checkbox" title="禁用" lay-skin="primary"  {$data.status ? 'checked' : '' } /</td>
+            <td><input type="text" name="ord[{$data.mid}]" value="{$data.ord}" class="layui-input"/></td>
+            <td><input type="text" name="title[{$data.mid}]" value="{$data.title}" class="layui-input"/></td>
+            <td><input type="text" name="controller[{$data.mid}]" value="{$data.controller}" class="layui-input"/></td>
+            <td><input type="text" name="method[{$data.mid}]" value="{$data.method}" class="layui-input"/></td>
+            <td><input type="checkbox" name="ishidden[{$data.mid}]" title="隐藏" lay-skin="primary"  {$data.ishidden ? 'checked' : '' } /></td>
+            <td><input type="checkbox" name="status[{$data.mid}]" title="禁用" lay-skin="primary"  {$data.status ? 'checked' : '' } /></td>
             <td><button class="layui-btn layui-btn-xs" onclick="child({$data.mid}); return false;">子菜单</button>
-
             </td>
         </tr>
         {/volist}
+        <tr>
+            <td></td>
+            <td><input type="text" name="ord[0]" value="" class="layui-input"/></td>
+            <td><input type="text" name="title[0]" value="" class="layui-input"/></td>
+            <td><input type="text" name="controller[0]" value="" class="layui-input"/></td>
+            <td><input type="text" name="method[0]" value="" class="layui-input"/></td>
+            <td><input type="checkbox" name="ishidden[0]" title="隐藏" lay-skin="primary" /></td>
+            <td><input type="checkbox" name="status[0]" title="禁用" lay-skin="primary"  /></td>
+            <td></td>
+        </tr>
         </tbody>
     </table>
+        <input type="hidden" name="pid" value="{$pid}"/>
     </form>
+    <button class="layui-btn" onclick="save()">保存</button>
 </div>
 {include file="public/foot"}
 <script type="text/javascript">
@@ -54,6 +65,17 @@
 
     function back(pid) {
         window.location.href = '/index.php/menu/index?pid='+pid;
+    }
+    
+    function save() {
+        $.post('/index.php/menu/save',$('form').serialize(),function(res){
+            if(res.code>0){
+                layer.msg(res.msg,{icon:2, time:500});
+            }else{
+                layer.msg(res.msg);
+                setTimeout(function(){window.location.reload();},500);
+            }
+        },'json');
     }
 
 </script>
