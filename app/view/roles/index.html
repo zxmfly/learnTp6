@@ -1,0 +1,76 @@
+{include file="public/header"}
+<div style="padding:10px;">
+    <div class="content">
+        <span>{$title}</span>
+        <button class="layui-btn layui-btn-xs add" onclick="add()">添加</button>
+        <div></div>
+    </div>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>角色名</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="groups" id="data"}
+        <tr>
+            <td>{$data.gid}</td>
+            <td>{$data.title}</td>
+            <td><button class="layui-btn layui-btn-xs" onclick="add({$data.gid})">编辑</button>
+                <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del({$data.gid})">删除</button>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div id="demo7"></div>
+</div>
+{include file="public/foot"}
+<script type="text/javascript">
+    layui.use(['layer','form','laypage'],function() {
+        var laypage = layui.laypage;
+        layer = layui.layer;
+        form = layui.form;
+        $ = layui.jquery;
+    });
+
+    function add(){
+        layer.open({
+            type: 2,
+            title: '添加角色',
+            shade: 0.3,
+            area: ['500px', '440px'],
+            content: '/index.php/roles/add'
+        });
+    }
+    function edit(id){
+        layer.open({
+            type: 2,
+            title: '查看/修改角色',
+            shade: 0.3,
+            area: ['500px', '440px'],
+            content: '/index.php/roles/edit?id='+id
+        });
+    }
+    function del( id){
+        layer.confirm('确定删除行么',
+            {
+                icon:3,
+                btn: ['确定','取消']
+            }, function() {
+                //向服务端发送删除指令
+                $.get("/index.php/roles/del?id=" + id, function (res) {
+                    if (res.code > 0) {
+                        layer.alert(res.msg, {icon: 2});
+                    } else {
+                        layer.msg(res.msg);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 500);
+                    }
+                }, 'json');
+            });
+    }
+</script>

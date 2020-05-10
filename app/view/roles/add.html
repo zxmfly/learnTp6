@@ -1,0 +1,53 @@
+{include file="public/header"}
+<body style="padding:10px;">
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色名</label>
+        <div class="layui-input-inline">
+            <input type="text" lay-verify="required" class="layui-input" name="title" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限菜单</label>
+        <div class="layui-input-inline">
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn"  lay-submit lay-filter="addRoleFrom">保存</button>
+        </div>
+    </div>
+</form>
+{include file="public/foot"}
+<script type="text/javascript">
+    layui.use(['layer','form'],function(){
+        form = layui.form;
+        layer = layui.layer;
+        $ = layui.jquery;
+        //监听提交
+        form.on('submit(addRoleFrom)', function (data) {
+            $.post('/index.php/roles/add',data.field,function(res){
+                if(res.code>0){
+                    layer.msg(res.msg,{icon:2, time:500});
+                }else{
+                    layer.msg(res.msg,{time:500});
+                    setTimeout(function(){parent.window.location.reload();},500);
+                }
+            },'json');
+            return false;
+        });
+    });
+
+    function save(){
+        $.post('/index.php/roles/add',$('form').serialize(),function(res){
+            if(res.code>0){
+                layer.msg(res.msg,{icon:2, time:500});
+            }else{
+                layer.msg(res.msg);
+                setTimeout(function(){parent.window.location.reload();},500);
+            }
+        },'json');
+    }
+</script>
