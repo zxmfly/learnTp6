@@ -23,7 +23,7 @@
             <td>{$data.id}</td>
             <td>{$data.username}</td>
             <td>{$data.truename}</td>
-            <td>{$groups[$data.gid]}</td>
+            <td>{:isset($groups[$data.gid]) ? $groups[$data.gid] : ''}</td>
             <td><!--{if $data.status == 0}正常{else}封禁{/if}-->{$data.status == 0 ? '正常' : '<span class="red">禁用</span>'}</td>
             <td><!--{$data.add_time|date='Y-m-d H:i:s'}--> {:date('Y-m-d H:i:s',$data.add_time)}</td>
             <td><button class="layui-btn layui-btn-xs" onclick="edit({$data.id})">编辑</button>

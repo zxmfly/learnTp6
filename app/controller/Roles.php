@@ -9,6 +9,7 @@
 namespace app\controller;
 
 use app\model\AdminMenu;
+use app\model\Admins;
 use app\model\Group;
 use think\facade\Request;
 use think\facade\View;
@@ -27,7 +28,13 @@ class Roles extends BaseAdmin
 
     public function add()
     {
+        $gid = Request::param('gid');
         $title = "角色列表";
+        $role = [];
+        if($gid > 0){
+            $role = Group::where('gid',$gid)->find();
+            $role && $role['rights']&& $role['rights'] = json_decode($role['rights'], 1);
+        }
         $menu_list = AdminMenu::menuCates('mid');
         $menus = $this->gettreeitems($menu_list);
         $results = [];
@@ -37,7 +44,8 @@ class Roles extends BaseAdmin
         }
         $menus = $results;
         unset($results);
-        $data = compact('title', 'menus');
+        $data = compact('title', 'menus', 'role');
+
         View::assign($data);
         return View::fetch();
     }
@@ -74,7 +82,28 @@ class Roles extends BaseAdmin
             echo json_encode(['code'=>1,'msg'=>'标题为空']);
             return;
         }
+        $menus && $data['rights'] = json_encode(array_keys($menus));
+        if(!intval($post['gid'])) {
+            if (Group::where('title', $data['title'])->find()) {
+                echo json_encode(['code' => 1, 'msg' => '角色名已存在']);
+                return;
+            }
+            Group::insert($data);
+        }else{
+            $data['gid'] = $post['gid'];
+            Group::updateGroups($data);
+        }
 
-        $menus && $data['right'] = json_encode($menus);
+        echo json_encode(['code'=>0,'msg'=>'保存成功']);
+    }
+
+    public function del(){
+        $id = input('get.id');
+        if(Admins::where('gid', $id)->find()){
+            echo json_encode(['code'=>1,'msg'=>'角色在使用中，删除失败']);
+            return;
+        }
+        Group::where('gid',$id)->delete();
+        echo json_encode(['code'=>0,'msg'=>'删除成功']);
     }
 }

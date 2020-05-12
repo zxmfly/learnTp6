@@ -2,7 +2,7 @@
 <div style="padding:10px;">
     <div class="content">
         <span>{$title}</span>
-        <button class="layui-btn layui-btn-xs add" onclick="add()">添加</button>
+        <button class="layui-btn layui-btn-xs add" onclick="add(0)">添加</button>
         <div></div>
     </div>
     <table class="layui-table">
@@ -36,25 +36,16 @@
         $ = layui.jquery;
     });
 
-    function add(){
+    function add(gid){
         layer.open({
             type: 2,
-            title: '添加角色',
+            title: gid > 0 ? '编辑角色' : '添加角色',
             shade: 0.3,
             area: ['800px', '600px'],
-            content: '/index.php/roles/add'
+            content: '/index.php/roles/add?gid='+gid
         });
     }
-    function edit(id){
-        layer.open({
-            type: 2,
-            title: '查看/修改角色',
-            shade: 0.3,
-            area: ['500px', '440px'],
-            content: '/index.php/roles/edit?id='+id
-        });
-    }
-    function del( id){
+    function del(id){
         layer.confirm('确定删除行么',
             {
                 icon:3,

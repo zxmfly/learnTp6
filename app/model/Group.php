@@ -24,4 +24,8 @@ class Group extends Model
 
         return $data;
     }
+
+    public static function updateGroups($all){
+        return Group::where('gid',$all['gid'])->update($all);
+    }
 }

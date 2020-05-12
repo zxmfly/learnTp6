@@ -4,6 +4,7 @@ namespace app\controller;
 use app\model\Cat;
 use app\model\AdminMenu;
 use app\model\Goods;
+use app\model\Group;
 use app\model\Menu;
 use think\facade\Request;
 use think\facade\View;
@@ -14,12 +15,37 @@ class Index extends BaseAdmin
     public function home(){
         $title = '商城管理系统';
         $login = $this->learntTpAdmin;
-        $left = AdminMenu::getAll();
+        $gid = $this->_admin['gid'];
+        $role = Group::where('gid', $gid)->find();
+        if($role)
+            $role['rights'] = isset($role['rights']) && $role['rights'] ? json_decode($role['rights'], 1) : [];
 
-
-        $data = compact('title','login','left');
+        $menus = [];
+        if($role['rights']){
+            $where = " `mid` in (".implode(',', $role['rights']).") and `ishidden` = 0 and `status` = 0";
+            $_menus = AdminMenu::where($where)->select()->toArray();
+            if($_menus){
+                foreach ($_menus as $row){
+                    $menus[$row['mid']] = $row;
+                }
+                $menus = $this->gettreeitems($menus);
+            }
+        }
+        $data = compact('title','login','menus');
         View::assign($data);
         return View::fetch();
+    }
+
+    private function gettreeitems($items){//采用引用的方式比递归快
+        $tree = array();
+        foreach ($items as $item) {
+            if(isset($items[$item['pid']])){
+                $items[$item['pid']]['children'][] = &$items[$item['mid']];//引用赋值的方式
+            }else{
+                $tree[] = &$items[$item['mid']];//引用赋值的方式
+            }
+        }
+        return $tree;
     }
 
     public function welcome(){

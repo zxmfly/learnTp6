@@ -5,17 +5,17 @@
 </div>
 <div class="menu" id="menu">
     <div class="layui-collapse" lay-accordion>
-        {volist name="left" id="data"}
+        {volist name="menus" id="data"}
         <div class="layui-colla-item">
             <h2 class="layui-colla-title">{$data.title}</h2>
             <div class="layui-colla-content {if $i eq 1}layui-show{/if}">
+                {if isset($data['children'])}
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                    {foreach $data['lists'] as $v }
-                    {if $v['ishidden'] eq 0}
+                    {foreach $data['children'] as $v }
                     <li class="layui-nav-item"><a onclick="menuFire(this)" src="/index.php/{$v['controller']}/{$v['method']}" href="javascript:;">{$v.title}</a></li>
-                    {/if}
                     {/foreach}
                 </ul>
+                {/if}
             </div>
         </div>
         {/volist}
