@@ -30,4 +30,17 @@ class AdminMenu extends Model
         return AdminMenu::where('mid',$all['mid'])->update($all);
     }
 
+    // 自定义索引列表
+    public static function menuCates($index){
+        $lists = AdminMenu::where('status',0)->select()->toArray();
+        if(!$lists){
+            return false;
+        }
+        $results = [];
+        foreach ($lists as $key => $value) {
+            $results[$value[$index]] = $value;
+        }
+        return $results;
+    }
+
 }

@@ -28,12 +28,15 @@ class Roles extends BaseAdmin
     public function add()
     {
         $title = "角色列表";
-        $menu_list = AdminMenu::where('status', 0)->select()->toArray();
-        foreach ($menu_list as $row) {
-            $menus[$row['mid']] = $row;
+        $menu_list = AdminMenu::menuCates('mid');
+        $menus = $this->gettreeitems($menu_list);
+        $results = [];
+        foreach ($menus as $value) {
+            $value['children'] = isset($value['children']) ? $this->formatMenus($value['children']) : false;
+            $results[] = $value;
         }
-        $menus = $this->gettreeitems($menus);
-        dump($menus);
+        $menus = $results;
+        unset($results);
         $data = compact('title', 'menus');
         View::assign($data);
         return View::fetch();
@@ -48,5 +51,30 @@ class Roles extends BaseAdmin
             }
         }
         return $tree;
+    }
+    private function formatMenus($items, &$res = []){
+        foreach($items as $item){
+            if(!isset($item['children'])){
+                $res[] = $item;
+            }else{
+                $tem = $item['children'];
+                unset($item['children']);
+                $res[] = $item;
+                $this->formatMenus($tem,$res);
+            }
+        }
+        return $res;
+    }
+
+    public function save(){
+        $post = Request::param();
+        $data['title'] = trim($post['title']);
+        $menus = input('post.menu/a');//input助手函数/修饰符
+        if(empty($data['title'])){
+            echo json_encode(['code'=>1,'msg'=>'标题为空']);
+            return;
+        }
+
+        $menus && $data['right'] = json_encode($menus);
     }
 }

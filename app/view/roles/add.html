@@ -9,9 +9,18 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">权限菜单</label>
-        <div class="layui-input-inline">
-
+        {foreach $menus as $row}
+        <div class="layui-input-block">
+            <input type="checkbox" name="menu[{$row.mid}]" lay-skin="primary" title="{$row.title}"/>
+            <hr  style= " width: 110px; background-color:transparent; height:1px;border:none;border-top:1px dashed #e6e6e6;  ">
+            <div style="padding-left: 20px;">
+            {foreach $row.children as $r}
+            <input type="checkbox" name="menu[{$r.mid}]" lay-skin="primary" title="{$r.title}"/>
+            {/foreach}
+            </div>
+            <hr>
         </div>
+        {/foreach}
     </div>
 
     <div class="layui-form-item">
