@@ -31,7 +31,7 @@ class Index extends BaseAdmin
                 $menus = $this->gettreeitems($menus);
             }
         }
-        $data = compact('title','login','menus');
+        $data = compact('title','login','menus', 'role');
         View::assign($data);
         return View::fetch();
     }

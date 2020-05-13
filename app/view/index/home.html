@@ -1,7 +1,7 @@
 {include file="public/header"}
 <div class="header">
     <span class="title"><span style="font-size: 20px;">{$title}</span>--后台管理系统</span>
-    <span class="userinfo">【{$login}】<span><a href="javascript:;" onclick="logout();">退出</a></span></span>
+    <span class="userinfo">{$login}[{$role.title}]<span><a href="javascript:;" onclick="logout();">退出</a></span></span>
 </div>
 <div class="menu" id="menu">
     <div class="layui-collapse" lay-accordion>
